@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: console
+  datasource:
+    url: "jdbc:mysql://localhost:3306/game?allowPublicKeyRetrieval=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true&useAffectedRows=true"
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+server:
+  port: 8081
+
+mybatis:
+  type-aliases-package: com.game.module.entity
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
