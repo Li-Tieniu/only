@@ -1,6 +1,6 @@
 package com.game.console.service;
 
-import com.game.module.DTO.AddGameDTO;
+import com.game.module.DTO.AddDTO;
 import com.game.module.entity.GameEntity;
 import com.game.module.mapper.GameMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ public class CommandService {
     private GameMapper gameMapper;
 
     //新增数据
-    public Long addGame(AddGameDTO dto) {
+    public Long addGame(AddDTO dto) {
 
         GameEntity entity = new GameEntity();
         entity.setCoverImage(dto.getCoverImage());
@@ -34,7 +34,7 @@ public class CommandService {
     }
 
     //修改数据
-    public int updateGame(AddGameDTO dto) {
+    public int updateGame(AddDTO dto) {
 
         GameEntity entity = new GameEntity();
         entity.setItemId(dto.getItemId());
@@ -50,7 +50,7 @@ public class CommandService {
     }
 
     //删除数据(逻辑删除)
-    public int softDeleteGame(AddGameDTO dto){
+    public int softDeleteGame(AddDTO dto){
 
         GameEntity entity = new GameEntity();
         entity.setItemId(dto.getItemId());
@@ -61,7 +61,7 @@ public class CommandService {
     }
 
     //强制删除数据(物理删除)
-    public int hardDeleteGame(AddGameDTO dto){
+    public int hardDeleteGame(AddDTO dto){
 
         GameEntity entity = new GameEntity();
         entity.setItemId(dto.getItemId());

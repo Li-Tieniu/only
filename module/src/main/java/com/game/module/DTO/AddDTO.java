@@ -3,7 +3,7 @@ package com.game.module.DTO;
 import lombok.Data;
 
 @Data
-public class AddGameDTO {
+public class AddDTO {
 
     private Long itemId;
     private String coverImage;

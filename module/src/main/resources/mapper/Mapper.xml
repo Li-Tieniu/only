@@ -2,15 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.game.module.mapper.GameMapper">
 
-<!--    查询未删除数据-->
+    <!--    查询未删除数据-->
     <select id="getinfo" resultType="com.game.module.entity.GameEntity">
         select * from game_trading
         where is_deleted = 0
     </select>
 
-<!--    查询所有数据-->
+    <!--    查询所有数据-->
     <select id="getall" resultType="com.game.module.entity.GameEntity">
         select * from game_trading
+    </select>
+
+    <!--    分页-->
+    <select id="page" resultType="com.game.module.entity.GameEntity">
+        select * from game_trading
+        where is_deleted = 0
+        order by create_time
+        limit #{offset}, #{size}
+    </select>
+
+    <!-- 查询总条数 -->
+    <select id="count" resultType="int">
+        select count(*) from game_trading where is_deleted = 0
     </select>
 
     <!--    新增数据-->

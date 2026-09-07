@@ -9,5 +9,7 @@ public class DetailsVO {
     private String gameName;
     private String price;
     private String details;
+    private String updateTime;
+    private String createTime;
 
 }
