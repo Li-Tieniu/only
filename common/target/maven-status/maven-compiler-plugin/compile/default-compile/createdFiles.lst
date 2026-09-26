@@ -1,0 +1,14 @@
+com\game\common\trading\vo\ProductVO.class
+com\game\common\trading\dto\ItemIdDTO.class
+com\game\common\response\ListVO.class
+com\game\common\trading\vo\DetailsVO.class
+com\game\common\response\ApiResult.class
+com\game\common\trading\mapper\GameMapper.class
+com\game\common\trading\service\GameQueryService.class
+com\game\common\trading\convert\GameConverter.class
+com\game\common\response\CursorPageResult.class
+com\game\common\util\RequestUrls.class
+com\game\common\trading\dto\GameSaveDTO.class
+com\game\common\trading\entity\GameEntity.class
+com\game\common\response\PageResult.class
+com\game\common\trading\service\GameCommandService.class

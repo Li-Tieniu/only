@@ -1,72 +1,51 @@
 package com.game.console.controller;
 
-import com.game.module.VO.DetailsVO;
-import com.game.module.VO.ListVO;
-import com.game.module.VO.PageResult;
-import com.game.module.VO.ProductVO;
-import com.game.console.service.SearchService;
+import com.game.common.response.ApiResult;
+import com.game.common.response.ListVO;
+import com.game.common.response.PageResult;
+import com.game.common.trading.service.GameQueryService;
+import com.game.common.trading.vo.DetailsVO;
+import com.game.common.trading.vo.ProductVO;
+import com.game.common.util.RequestUrls;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 管理端交易查询接口（API 适配层）
+ */
 @RequestMapping("/gametrading")
 @RestController
 public class QueryController {
 
-    @Autowired
-    private SearchService searchService;
+    private final GameQueryService gameQueryService;
 
-    //查询数据(列表)
+    public QueryController(GameQueryService gameQueryService) {
+        this.gameQueryService = gameQueryService;
+    }
+
+    /**
+     * 查询商品列表
+     * GET /gametrading/getinfoproduct
+     */
     @GetMapping("/getinfoproduct")
-    public ListVO<ProductVO> getinfoproduct() {
-
-        return searchService.getinfoproduct();
-
+    public ApiResult<ListVO<ProductVO>> getInfoProduct() {
+        return ApiResult.success(gameQueryService.listProducts());
     }
 
-    //查询数据(详情)
+    /**
+     * 分页查询商品详情
+     * GET /gametrading/getinfodetails?page=1&amp;page_size=10
+     */
     @GetMapping("/getinfodetails")
-    public PageResult<DetailsVO> getinfodetails(
+    public ApiResult<PageResult<DetailsVO>> getInfoDetails(
             @RequestParam(defaultValue = "1") Integer page,
-            @RequestParam(defaultValue = "10") Integer size
+            @RequestParam(name = "page_size", defaultValue = "10") Integer pageSize
     ) {
-
-        if (size > 100){
-            size = 100;
-        }
-        if(size < 1){
-            size = 1;
-        }
-        if(page < 1){
-            page = 1;
-        }
-        return searchService.getDetailsPage(page, size);
-
+        return ApiResult.success(
+                gameQueryService.pageDetails(page, pageSize, RequestUrls.currentWithoutQuery())
+        );
     }
-
 }
-
-
-
-
-
-/*
-    //查询所有未删除数据
-    @GetMapping("/getinfo")
-    public List<GameEntity> getinfo(){
-
-        return searchService.getinfo();
-
-    }
-
-    //查询所有游戏数据
-    @GetMapping("/getall")
-    public List<GameEntity> getall(){
-
-        return searchService.getall();
-
-    }
-
-*/

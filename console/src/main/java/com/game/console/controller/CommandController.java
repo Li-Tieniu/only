@@ -1,46 +1,68 @@
 package com.game.console.controller;
 
-import com.game.module.DTO.AddDTO;
-import com.game.console.service.CommandService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import com.game.common.response.ApiResult;
+import com.game.common.trading.dto.GameSaveDTO;
+import com.game.common.trading.dto.ItemIdDTO;
+import com.game.common.trading.service.GameCommandService;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 管理端交易写操作接口（API 适配层）
+ */
 @RequestMapping("/gametrading")
 @RestController
 public class CommandController {
 
-    @Autowired
-    private CommandService commandService;
+    private final GameCommandService gameCommandService;
 
-    //新增数据
+    public CommandController(GameCommandService gameCommandService) {
+        this.gameCommandService = gameCommandService;
+    }
+
+    /**
+     * 新增商品
+     * POST /gametrading/addgame
+     *
+     * @return 新商品主键 ID
+     */
     @PostMapping("/addgame")
-    public Long addGame(@RequestBody AddDTO dto){
-
-        return commandService.addGame(dto);
-
+    public ApiResult<Long> addGame(@RequestBody GameSaveDTO dto) {
+        return ApiResult.success(gameCommandService.add(dto));
     }
 
-    //修改数据
+    /**
+     * 修改商品
+     * POST /gametrading/updategame
+     *
+     * @return 影响行数
+     */
     @PostMapping("/updategame")
-    public int updateGame(@RequestBody AddDTO dto){
-
-        return commandService.updateGame(dto);
-
+    public ApiResult<Integer> updateGame(@RequestBody GameSaveDTO dto) {
+        return ApiResult.success(gameCommandService.update(dto));
     }
 
-    //逻辑删除数据
+    /**
+     * 逻辑删除商品
+     * POST /gametrading/softdeletegame
+     *
+     * @return 影响行数
+     */
     @PostMapping("/softdeletegame")
-    public int softDeleteGame(@RequestBody AddDTO dto){
-
-        return commandService.softDeleteGame(dto);
-
+    public ApiResult<Integer> softDeleteGame(@RequestBody ItemIdDTO dto) {
+        return ApiResult.success(gameCommandService.softDelete(dto.getItemId()));
     }
 
-    //物理删除数据
+    /**
+     * 物理删除商品
+     * POST /gametrading/harddeletegame
+     *
+     * @return 影响行数
+     */
     @PostMapping("/harddeletegame")
-    public int hardDeleteGame(@RequestBody AddDTO dto){
-
-        return commandService.hardDeleteGame(dto);
-
+    public ApiResult<Integer> hardDeleteGame(@RequestBody ItemIdDTO dto) {
+        return ApiResult.success(gameCommandService.hardDelete(dto.getItemId()));
     }
 }

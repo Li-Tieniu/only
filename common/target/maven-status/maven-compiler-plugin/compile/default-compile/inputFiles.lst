@@ -1,0 +1,14 @@
+D:\Data\Java\only\common\src\main\java\com\game\common\trading\service\GameCommandService.java
+D:\Data\Java\only\common\src\main\java\com\game\common\trading\service\GameQueryService.java
+D:\Data\Java\only\common\src\main\java\com\game\common\response\CursorPageResult.java
+D:\Data\Java\only\common\src\main\java\com\game\common\trading\convert\GameConverter.java
+D:\Data\Java\only\common\src\main\java\com\game\common\trading\dto\GameSaveDTO.java
+D:\Data\Java\only\common\src\main\java\com\game\common\trading\dto\ItemIdDTO.java
+D:\Data\Java\only\common\src\main\java\com\game\common\response\ListVO.java
+D:\Data\Java\only\common\src\main\java\com\game\common\trading\mapper\GameMapper.java
+D:\Data\Java\only\common\src\main\java\com\game\common\trading\vo\ProductVO.java
+D:\Data\Java\only\common\src\main\java\com\game\common\trading\vo\DetailsVO.java
+D:\Data\Java\only\common\src\main\java\com\game\common\trading\entity\GameEntity.java
+D:\Data\Java\only\common\src\main\java\com\game\common\util\RequestUrls.java
+D:\Data\Java\only\common\src\main\java\com\game\common\response\ApiResult.java
+D:\Data\Java\only\common\src\main\java\com\game\common\response\PageResult.java

@@ -1,18 +1,24 @@
+# 客户端应用配置
 spring:
     application:
         name: app
     datasource:
+        # 游戏交易库连接
         url: "jdbc:mysql://localhost:3306/game?allowPublicKeyRetrieval=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true&useAffectedRows=true"
         username: root
         password: 1234
         driver-class-name: com.mysql.cj.jdbc.Driver
 
+# 客户端服务端口
 server:
     port: 8080
 
+# MyBatis 配置
 mybatis:
-    type-aliases-package: com.game.module.entity
+    type-aliases-package: com.game.common.trading.entity
     mapper-locations: classpath:mapper/*.xml
     configuration:
+        # 下划线字段自动映射为驼峰属性
         map-underscore-to-camel-case: true
+        # 开发环境打印 SQL
         log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
