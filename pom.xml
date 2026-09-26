@@ -25,7 +25,7 @@
 
     <properties>
         <java.version>21</java.version>
-        <mybatis-spring-boot.version>3.0.3</mybatis-spring-boot.version>
+        <mybatis-plus.version>3.5.7</mybatis-plus.version>
     </properties>
 
     <!-- 统一版本管理，不向子模块强行注入依赖 -->
@@ -36,10 +36,11 @@
                 <artifactId>common</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <!-- MyBatis-Plus：Spring Boot 3 专用 starter，由 common 引入后 app / console 传递使用 -->
             <dependency>
-                <groupId>org.mybatis.spring.boot</groupId>
-                <artifactId>mybatis-spring-boot-starter</artifactId>
-                <version>${mybatis-spring-boot.version}</version>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

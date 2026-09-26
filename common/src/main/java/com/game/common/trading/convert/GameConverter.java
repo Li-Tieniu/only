@@ -66,18 +66,11 @@ public final class GameConverter {
         return entity;
     }
 
-    /** 按主键构建逻辑删除实体 */
+    /** 按主键构建逻辑删除补丁（携带最新的修改时间） */
     public static GameEntity toSoftDeleteEntity(Long itemId) {
         GameEntity entity = new GameEntity();
         entity.setItemId(itemId);
         entity.setUpdateTime(currentEpochSecond());
-        return entity;
-    }
-
-    /** 按主键构建物理删除实体 */
-    public static GameEntity toHardDeleteEntity(Long itemId) {
-        GameEntity entity = new GameEntity();
-        entity.setItemId(itemId);
         return entity;
     }
 

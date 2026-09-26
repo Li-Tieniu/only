@@ -1,49 +1,24 @@
 package com.game.common.trading.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.game.common.trading.entity.GameEntity;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
-
 /**
- * 游戏交易商品 Mapper，对应 GameMapper.xml
+ * 游戏交易商品 Mapper。
+ * 继承 BaseMapper 后即可直接使用单表 CRUD 与条件构造器，原来的 GameMapper.xml 已移除。
  */
 @Mapper
-public interface GameMapper {
-
-    /** 查询全部未删除商品 */
-    List<GameEntity> listActive();
+public interface GameMapper extends BaseMapper<GameEntity> {
 
     /**
-     * 分页查询未删除商品
+     * 物理删除：绕过逻辑删除，直接从数据库删除记录。
      *
-     * @param offset 偏移量
-     * @param size   每页条数
+     * @param itemId 商品主键 ID
+     * @return 影响行数
      */
-    List<GameEntity> page(@Param("offset") int offset, @Param("size") int size);
-
-    /**
-     * 瀑布流游标分页查询。
-     * 按 item_id 倒序；cursor 为空表示第一屏，否则取 item_id 小于 cursor 的后续数据。
-     *
-     * @param cursor 上一屏最后一条的 itemId，首页传 null
-     * @param size   拉取条数（可多取 1 条用于判断 has_more）
-     */
-    List<GameEntity> waterfall(@Param("cursor") Long cursor, @Param("size") int size);
-
-    /** 统计未删除商品总数 */
-    int count();
-
-    /** 新增商品，插入后回填主键 itemId */
-    int insert(GameEntity entity);
-
-    /** 按主键修改未删除商品（空字段不更新） */
-    int update(GameEntity entity);
-
-    /** 逻辑删除：将 is_deleted 置为 1 */
-    int softDelete(GameEntity entity);
-
-    /** 物理删除：从数据库中删除记录 */
-    int hardDelete(GameEntity entity);
+    @Delete("delete from game_trading where item_id = #{itemId}")
+    int hardDelete(@Param("itemId") Long itemId);
 }

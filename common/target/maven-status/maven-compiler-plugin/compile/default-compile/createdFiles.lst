@@ -1,4 +1,5 @@
 com\game\common\trading\vo\ProductVO.class
+com\game\common\config\MybatisPlusConfig.class
 com\game\common\trading\dto\ItemIdDTO.class
 com\game\common\response\ListVO.class
 com\game\common\trading\vo\DetailsVO.class

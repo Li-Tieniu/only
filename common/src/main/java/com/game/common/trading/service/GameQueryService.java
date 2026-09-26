@@ -1,5 +1,7 @@
 package com.game.common.trading.service;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.game.common.response.CursorPageResult;
 import com.game.common.response.ListVO;
 import com.game.common.response.PageResult;
@@ -27,7 +29,10 @@ public class GameQueryService {
 
     /** 查询全部未删除商品列表 */
     public ListVO<ProductVO> listProducts() {
-        List<ProductVO> items = gameMapper.listActive().stream()
+        // @TableLogic 会自动追加 is_deleted = 0，无需手写 where
+        List<ProductVO> items = gameMapper.selectList(
+                        Wrappers.<GameEntity>lambdaQuery().orderByDesc(GameEntity::getCreateTime))
+                .stream()
                 .map(GameConverter::toProductVO)
                 .toList();
         return ListVO.of(items);
@@ -41,11 +46,15 @@ public class GameQueryService {
      * @param baseUrl  当前接口基础 URL（用于生成上下页链接）
      */
     public PageResult<DetailsVO> pageDetails(Integer page, Integer pageSize, String baseUrl) {
-        int offset = (page - 1) * pageSize;
-        List<DetailsVO> items = gameMapper.page(offset, pageSize).stream()
+        // 分页插件负责拼接 limit 与 count SQL
+        Page<GameEntity> pageData = gameMapper.selectPage(
+                new Page<>(page, pageSize),
+                Wrappers.<GameEntity>lambdaQuery().orderByDesc(GameEntity::getCreateTime)
+        );
+        List<DetailsVO> items = pageData.getRecords().stream()
                 .map(GameConverter::toDetailsVO)
                 .toList();
-        return PageResult.of(items, gameMapper.count(), page, pageSize, baseUrl);
+        return PageResult.of(items, pageData.getTotal(), page, pageSize, baseUrl);
     }
 
     /**
@@ -56,11 +65,18 @@ public class GameQueryService {
      * @param baseUrl  当前接口基础 URL
      */
     public CursorPageResult<ProductVO> waterfallProducts(Long cursor, Integer pageSize, String baseUrl) {
-        // 多查 1 条，用于判断是否还有下一屏
-        List<GameEntity> entities = gameMapper.waterfall(cursor, pageSize + 1);
+        // 多查 1 条用于判断是否还有下一屏；游标分页不需要总数，第三个参数 false 关闭 count 查询
+        Page<GameEntity> pageData = gameMapper.selectPage(
+                new Page<>(1, pageSize + 1L, false),
+                Wrappers.<GameEntity>lambdaQuery()
+                        .lt(cursor != null, GameEntity::getItemId, cursor)
+                        .orderByDesc(GameEntity::getItemId)
+        );
+
+        List<GameEntity> entities = new ArrayList<>(pageData.getRecords());
         boolean hasMore = entities.size() > pageSize;
         if (hasMore) {
-            entities = new ArrayList<>(entities.subList(0, pageSize));
+            entities = entities.subList(0, pageSize);
         }
 
         List<ProductVO> items = entities.stream()
