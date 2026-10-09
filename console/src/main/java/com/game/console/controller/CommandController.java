@@ -4,6 +4,7 @@ import com.game.common.response.ApiResult;
 import com.game.common.trading.dto.GameSaveDTO;
 import com.game.common.trading.dto.ItemIdDTO;
 import com.game.common.trading.service.GameCommandService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +30,7 @@ public class CommandController {
      * @return 新商品主键 ID
      */
     @PostMapping("/addgame")
-    public ApiResult<Long> addGame(@RequestBody GameSaveDTO dto) {
+    public ApiResult<Long> addGame(@Valid @RequestBody GameSaveDTO dto) {
         return ApiResult.success(gameCommandService.add(dto));
     }
 
@@ -40,7 +41,7 @@ public class CommandController {
      * @return 影响行数
      */
     @PostMapping("/updategame")
-    public ApiResult<Integer> updateGame(@RequestBody GameSaveDTO dto) {
+    public ApiResult<Integer> updateGame(@Valid @RequestBody GameSaveDTO dto) {
         return ApiResult.success(gameCommandService.update(dto));
     }
 
@@ -51,7 +52,7 @@ public class CommandController {
      * @return 影响行数
      */
     @PostMapping("/softdeletegame")
-    public ApiResult<Integer> softDeleteGame(@RequestBody ItemIdDTO dto) {
+    public ApiResult<Integer> softDeleteGame(@Valid @RequestBody ItemIdDTO dto) {
         return ApiResult.success(gameCommandService.softDelete(dto.getItemId()));
     }
 
@@ -62,7 +63,7 @@ public class CommandController {
      * @return 影响行数
      */
     @PostMapping("/harddeletegame")
-    public ApiResult<Integer> hardDeleteGame(@RequestBody ItemIdDTO dto) {
+    public ApiResult<Integer> hardDeleteGame(@Valid @RequestBody ItemIdDTO dto) {
         return ApiResult.success(gameCommandService.hardDelete(dto.getItemId()));
     }
 }

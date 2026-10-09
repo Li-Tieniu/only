@@ -55,8 +55,9 @@ public class PageResult<T> {
         return result;
     }
 
-    /** 拼接分页查询 URL */
+    /** 拼接分页查询 URL；baseUrl 上可能已经带有 keyword 等筛选条件，所以要用 & 连接 */
     private static String buildPageUrl(String baseUrl, int page, int pageSize) {
-        return baseUrl + "?page=" + page + "&page_size=" + pageSize;
+        String separator = baseUrl.contains("?") ? "&" : "?";
+        return baseUrl + separator + "page=" + page + "&page_size=" + pageSize;
     }
 }

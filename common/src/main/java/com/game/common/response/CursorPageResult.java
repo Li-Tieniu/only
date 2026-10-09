@@ -53,8 +53,14 @@ public class CursorPageResult<T> {
         result.setHasMore(hasMore);
         result.setNextCursor(nextCursor);
         result.setNextPage(hasMore && nextCursor != null
-                ? baseUrl + "?cursor=" + nextCursor + "&page_size=" + pageSize
+                ? buildNextPageUrl(baseUrl, nextCursor, pageSize)
                 : null);
         return result;
+    }
+
+    /** 拼接下一屏 URL；baseUrl 上可能已经带有 keyword 等筛选条件，所以要用 & 连接 */
+    private static String buildNextPageUrl(String baseUrl, Long nextCursor, int pageSize) {
+        String separator = baseUrl.contains("?") ? "&" : "?";
+        return baseUrl + separator + "cursor=" + nextCursor + "&page_size=" + pageSize;
     }
 }

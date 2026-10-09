@@ -1,0 +1,19 @@
+# Maven 构建产物（本地编译 / 测试输出，不应提交到仓库）
+# 各模块的 target 目录统一忽略，只保留源码与配置源文件
+target/
+
+# 前端（Vue 3 + Vite）依赖与构建产物
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/*.local
+
+# 本地环境文件：真实口令、密钥等只放本地，不提交
+.env
+.env.local
+.env.*.local
+application-local.yml
+application-local.properties
+
+# pnpm 本地存储缓存（安装依赖时可能生成在仓库根目录）
+.pnpm-store/
