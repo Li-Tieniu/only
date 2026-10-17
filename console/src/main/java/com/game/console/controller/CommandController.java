@@ -5,6 +5,7 @@ import com.game.common.trading.dto.GameSaveDTO;
 import com.game.common.trading.dto.ItemIdDTO;
 import com.game.common.trading.service.GameCommandService;
 import jakarta.validation.Valid;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,22 +27,24 @@ public class CommandController {
     /**
      * 新增商品
      * POST /gametrading/addgame
+     * 使用 AddGroup 校验：商品字段全部必填（缺字段返回 400，而不是数据库异常）
      *
      * @return 新商品主键 ID
      */
     @PostMapping("/addgame")
-    public ApiResult<Long> addGame(@Valid @RequestBody GameSaveDTO dto) {
+    public ApiResult<Long> addGame(@Validated(GameSaveDTO.AddGroup.class) @RequestBody GameSaveDTO dto) {
         return ApiResult.success(gameCommandService.add(dto));
     }
 
     /**
      * 修改商品
      * POST /gametrading/updategame
+     * 使用 UpdateGroup 校验：只有 itemId 必填，其余字段可以不传（只更新传了的字段）
      *
      * @return 影响行数
      */
     @PostMapping("/updategame")
-    public ApiResult<Integer> updateGame(@Valid @RequestBody GameSaveDTO dto) {
+    public ApiResult<Integer> updateGame(@Validated(GameSaveDTO.UpdateGroup.class) @RequestBody GameSaveDTO dto) {
         return ApiResult.success(gameCommandService.update(dto));
     }
 
