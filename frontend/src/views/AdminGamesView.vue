@@ -3,7 +3,6 @@ import { onMounted, reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   adminAddGame,
-  adminListProducts,
   adminPageDetails,
   adminSoftDeleteGame,
   adminUpdateGame
@@ -13,6 +12,8 @@ import { formatPrice } from '../utils/format'
 const loading = ref(false)
 const saving = ref(false)
 const rows = ref([])
+const total = ref(0)
+const page = reactive({ current: 1, size: 10 })
 
 const dialogVisible = ref(false)
 const dialogTitle = ref('新增商品')
@@ -49,23 +50,27 @@ const rules = {
 async function load() {
   loading.value = true
   try {
-    // 列表接口给封面图，详情接口给大图与描述，两张表按 itemId 合并后用于表格展示与回填编辑表单
-    const [list, detailPage] = await Promise.all([
-      adminListProducts(),
-      adminPageDetails({ page: 1, page_size: 100 })
-    ])
-    const coverMap = new Map((list?.items || []).map((item) => [String(item.itemId), item]))
-    rows.value = (detailPage?.items || []).map((detail) => {
-      const cover = coverMap.get(String(detail.itemId))
-      return {
-        ...detail,
-        coverImage: cover?.coverImage || '',
-        wallImagesText: (detail.wallImages || []).join('$')
-      }
-    })
+    const detailPage = await adminPageDetails({ page: page.current, page_size: page.size })
+    total.value = detailPage?.total || 0
+    // 下架后若当前页已超出末页，回到仍有数据的页码。
+    const lastPage = Math.max(1, Math.ceil(total.value / page.size))
+    if (page.current > lastPage) {
+      page.current = lastPage
+      return await load()
+    }
+    rows.value = (detailPage?.items || []).map((detail) => ({
+      ...detail,
+      wallImagesText: (detail.wallImages || []).join('$')
+    }))
   } finally {
     loading.value = false
   }
+}
+
+function changePage(current) {
+  if (page.current === current) return
+  page.current = current
+  return load()
 }
 
 function openCreate() {
@@ -167,6 +172,15 @@ onMounted(load)
     </el-table>
 
     <el-empty v-if="!loading && rows.length === 0" description="暂无商品" />
+    <el-pagination
+      :current-page="page.current"
+      :page-size="page.size"
+      :total="total"
+      :disabled="loading"
+      layout="total, prev, pager, next"
+      style="margin-top: 16px; justify-content: flex-end"
+      @current-change="changePage"
+    />
   </div>
 
   <el-dialog v-model="dialogVisible" :title="dialogTitle" width="560px">

@@ -37,6 +37,7 @@ public final class GameConverter {
     public static DetailsVO toDetailsVO(GameEntity entity) {
         DetailsVO vo = new DetailsVO();
         vo.setItemId(entity.getItemId());
+        vo.setCoverImage(entity.getCoverImage());
         vo.setWallImages(splitImages(entity.getWallImages()));
         vo.setGameName(entity.getGameName());
         vo.setPrice(entity.getPrice());

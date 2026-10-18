@@ -100,8 +100,41 @@ class DtoValidationTest {
         assertThat(messages(dto)).isEmpty();
     }
 
+    @Test
+    @DisplayName("新增商品（AddGroup）：所有商品字段必填，避免落到数据库报 500")
+    void addGroupShouldRequireAllProductFields() {
+        assertThat(messages(new GameSaveDTO(), GameSaveDTO.AddGroup.class))
+                .contains("封面图不能为空", "详情图不能为空", "游戏名称不能为空",
+                        "商品价格不能为空", "商品详情不能为空");
+    }
+
+    @Test
+    @DisplayName("修改商品（UpdateGroup）：只有 itemId 必填，允许只传部分字段")
+    void updateGroupShouldRequireOnlyItemId() {
+        // 只传了 gameName，没传 itemId → 只报 itemId 缺失
+        GameSaveDTO partial = new GameSaveDTO();
+        partial.setGameName("王者荣耀");
+        assertThat(messages(partial, GameSaveDTO.UpdateGroup.class))
+                .containsExactly("商品 ID 不能为空");
+
+        // 带 itemId + 空串价格（表示不修改）→ 无校验错误
+        GameSaveDTO update = new GameSaveDTO();
+        update.setItemId(1L);
+        update.setPrice("");
+        assertThat(messages(update, GameSaveDTO.UpdateGroup.class)).isEmpty();
+
+        // 价格格式非法时，通用约束在 UpdateGroup 下同样生效
+        update.setPrice("abc");
+        assertThat(messages(update, GameSaveDTO.UpdateGroup.class))
+                .contains("商品价格必须是不小于 0 的数字，最多两位小数");
+    }
+
     private static Set<String> messages(Object target) {
-        return VALIDATOR.validate(target).stream()
+        return messages(target, new Class<?>[0]);
+    }
+
+    private static Set<String> messages(Object target, Class<?>... groups) {
+        return VALIDATOR.validate(target, groups).stream()
                 .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toSet());
     }

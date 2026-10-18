@@ -1,12 +1,14 @@
 <script setup>
 import { onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { listProducts } from '../api/game'
+import { pageDetails } from '../api/game'
 import { formatPrice } from '../utils/format'
 
 const router = useRouter()
 const loading = ref(false)
 const products = ref([])
+const total = ref(0)
+const page = reactive({ current: 1, size: 10 })
 
 const query = reactive({
   keyword: '',
@@ -25,17 +27,29 @@ async function load() {
   loading.value = true
   try {
     // 只把有值的参数传给后端，避免拼出无效查询条件
-    const params = {}
+    const params = { page: page.current, page_size: page.size }
     if (query.keyword) params.keyword = query.keyword
     if (query.minPrice !== null && query.minPrice !== '') params.min_price = query.minPrice
     if (query.maxPrice !== null && query.maxPrice !== '') params.max_price = query.maxPrice
     if (query.sort) params.sort = query.sort
 
-    const data = await listProducts(params)
+    const data = await pageDetails(params)
     products.value = data?.items || []
+    total.value = data?.total || 0
   } finally {
     loading.value = false
   }
+}
+
+function search() {
+  page.current = 1
+  return load()
+}
+
+function changePage(current) {
+  if (page.current === current) return
+  page.current = current
+  return load()
 }
 
 function reset() {
@@ -43,7 +57,7 @@ function reset() {
   query.minPrice = null
   query.maxPrice = null
   query.sort = ''
-  load()
+  return search()
 }
 
 function openDetail(item) {
@@ -59,7 +73,7 @@ onMounted(load)
     <el-form :inline="true" :model="query" @submit.prevent>
       <el-form-item label="关键词">
         <el-input v-model="query.keyword" placeholder="按游戏名称搜索" clearable style="width: 180px"
-                  @keyup.enter="load" />
+                  @keyup.enter="search" />
       </el-form-item>
       <el-form-item label="价格区间">
         <el-input-number v-model="query.minPrice" :min="0" :controls="false" placeholder="最低价"
@@ -74,7 +88,7 @@ onMounted(load)
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="load">搜索</el-button>
+        <el-button type="primary" @click="search">搜索</el-button>
         <el-button @click="reset">重置</el-button>
       </el-form-item>
     </el-form>
@@ -92,6 +106,15 @@ onMounted(load)
         </div>
       </div>
     </div>
+    <el-pagination
+      :current-page="page.current"
+      :page-size="page.size"
+      :total="total"
+      :disabled="loading"
+      layout="total, prev, pager, next"
+      style="margin-top: 16px; justify-content: flex-end"
+      @current-change="changePage"
+    />
   </div>
 </template>
 

@@ -11,6 +11,7 @@ import java.util.List;
 public class DetailsVO {
 
     private Long itemId;
+    private String coverImage;
     private List<String> wallImages;
     private String gameName;
     private String price;

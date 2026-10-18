@@ -54,6 +54,16 @@ public class GameQueryService {
         return ListVO.of(items);
     }
 
+    /** 按主键查询商品详情，已下架商品不对外展示 */
+    public DetailsVO getDetailById(Long itemId) {
+        // selectById 会通过 @TableLogic 自动过滤已逻辑删除的商品。
+        GameEntity entity = gameMapper.selectById(itemId);
+        if (entity == null || Integer.valueOf(1).equals(entity.getIsDeleted())) {
+            throw new BusinessException(404, "商品不存在或已下架");
+        }
+        return GameConverter.toDetailsVO(entity);
+    }
+
     /**
      * 分页查询商品详情（支持关键词、价格区间、排序）
      *

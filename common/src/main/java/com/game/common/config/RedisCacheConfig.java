@@ -29,7 +29,6 @@ import java.time.Duration;
 public class RedisCacheConfig implements CachingConfigurer {
 
     private static final Logger log = LoggerFactory.getLogger(RedisCacheConfig.class);
-
     /** 缓存有效期：10 分钟，即使漏了清理也不会长期看到脏数据 */
     private static final Duration TTL = Duration.ofMinutes(10);
 

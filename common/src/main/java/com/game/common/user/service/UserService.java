@@ -51,7 +51,7 @@ public class UserService {
             throw new BusinessException("密码不能为空");
         }
         if (existsByUsername(username)) {
-            log.warn("注册失败，用户名已存在, username={}", username);
+            log.warn("注册失败，用户名已存在, “{}”已被使用", username);
             throw new BusinessException("用户名已存在");
         }
 
@@ -66,7 +66,7 @@ public class UserService {
             userMapper.insert(entity);
         } catch (DuplicateKeyException e) {
             // 并发注册同一用户名时由唯一索引兜底
-            log.warn("注册失败，用户名已存在（唯一索引兜底）, username={}", username);
+            log.warn("注册失败，用户名已存在, “{}”已被使用", username);
             throw new BusinessException("用户名已存在");
         }
         log.info("用户注册成功, userId={}, username={}", entity.getId(), username);
