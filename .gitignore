@@ -1,0 +1,30 @@
+# Generated dependencies, build output and local test state
+target/
+node_modules/
+frontend/dist/
+frontend/.vite/
+.pnpm-store/
+*.log
+
+# IDE and personal files
+.idea/
+.vscode/
+*.iml
+/tmp/
+/backups/
+
+# Local credentials; the checked-in example contains no values
+.env
+.env.*
+!.env.example
+frontend/*.local
+application-local.yml
+application-local.yaml
+application-local.properties
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+.DS_Store
+Thumbs.db
